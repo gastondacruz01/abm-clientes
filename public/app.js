@@ -45,11 +45,44 @@ function escapeHtml(str = '') {
   }[m]));
 }
 
-// Baseline: el botón Guardar avisa que la US-001 todavía no está implementada
-document.getElementById('btn-guardar').addEventListener('click', () => {
-  const err = document.getElementById('form-error');
-  err.textContent = 'Funcionalidad pendiente: implementar US-001 (Alta de cliente).';
-  err.classList.remove('hidden');
+// US-001: Alta de cliente
+document.getElementById('btn-guardar').addEventListener('click', async () => {
+  const nombre = document.getElementById('nombre').value.trim();
+  const apellido = document.getElementById('apellido').value.trim();
+  const documento = document.getElementById('documento').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const formError = document.getElementById('form-error');
+
+  formError.classList.add('hidden');
+
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre, apellido, documento, email })
+    });
+
+    if (!res.ok) {
+      const data = await res.json();
+      formError.textContent = data.error || 'Error al guardar el cliente';
+      formError.classList.remove('hidden');
+      return;
+    }
+
+    limpiarFormulario();
+    cargarClientes();
+  } catch (err) {
+    formError.textContent = 'Error de conexión';
+    formError.classList.remove('hidden');
+  }
 });
+
+function limpiarFormulario() {
+  document.getElementById('nombre').value = '';
+  document.getElementById('apellido').value = '';
+  document.getElementById('documento').value = '';
+  document.getElementById('email').value = '';
+  document.getElementById('form-error').classList.add('hidden');
+}
 
 cargarClientes();
