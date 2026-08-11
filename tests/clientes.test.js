@@ -88,3 +88,40 @@ describe('US-001 — Alta de cliente', () => {
     expect(res.body.error).toBe('Ya existe un cliente con ese documento');
   });
 });
+
+describe('US-003 — Modificación de cliente', () => {
+  test('Escenario 1: Given cliente existente, When PUT con datos válidos, Then 200 con actualizadoEn refrescado y creadoEn sin cambios', async () => {
+    const cliente = { nombre: 'Juan', apellido: 'Pérez', documento: '30123456', email: 'juan@mail.com' };
+    const crear = await request(app).post('/api/clientes').send(cliente);
+    const creadoEn = crear.body.creadoEn;
+
+    const modificado = { nombre: 'Juan Carlos', apellido: 'Pérez', documento: '30123456', email: 'jc@mail.com' };
+    const res = await request(app).put('/api/clientes/1').send(modificado);
+
+    expect(res.status).toBe(200);
+    expect(res.body.nombre).toBe('Juan Carlos');
+    expect(res.body.email).toBe('jc@mail.com');
+    expect(res.body.creadoEn).toBe(creadoEn);
+    expect(res.body.actualizadoEn).toBeDefined();
+    expect(new Date(res.body.actualizadoEn).getTime()).toBeGreaterThanOrEqual(new Date(creadoEn).getTime());
+  });
+
+  test('Escenario 2: Given cliente inexistente, When PUT /api/clientes/999, Then 404', async () => {
+    const modificado = { nombre: 'Nadie', apellido: 'Existe', documento: '99999999', email: 'no@mail.com' };
+    const res = await request(app).put('/api/clientes/999').send(modificado);
+
+    expect(res.status).toBe(404);
+  });
+
+  test('Escenario 3: Given dos clientes con documentos distintos, When cambio documento del segundo al del primero, Then 409', async () => {
+    const cliente1 = { nombre: 'Juan', apellido: 'Pérez', documento: '111', email: 'juan@mail.com' };
+    const cliente2 = { nombre: 'Ana', apellido: 'García', documento: '222', email: 'ana@mail.com' };
+    await request(app).post('/api/clientes').send(cliente1);
+    await request(app).post('/api/clientes').send(cliente2);
+
+    const modificado = { nombre: 'Ana', apellido: 'García', documento: '111', email: 'ana@mail.com' };
+    const res = await request(app).put('/api/clientes/2').send(modificado);
+
+    expect(res.status).toBe(409);
+  });
+});

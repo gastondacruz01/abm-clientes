@@ -61,4 +61,40 @@ router.post('/', (req, res) => {
   res.status(201).json(nuevoCliente);
 });
 
+// --- US-003: Modificación de cliente ---
+router.put('/:id', (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const { nombre, apellido, documento, email } = req.body;
+
+  const state = db.load();
+  const index = state.clientes.findIndex(c => c.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ error: 'Cliente no encontrado' });
+  }
+
+  const cliente = state.clientes[index];
+
+  if (documento && documento !== cliente.documento) {
+    const duplicado = state.clientes.find(c => c.documento === documento && c.id !== id);
+    if (duplicado) {
+      return res.status(409).json({ error: 'Ya existe un cliente con ese documento' });
+    }
+  }
+
+  const clienteActualizado = {
+    ...cliente,
+    nombre: nombre ?? cliente.nombre,
+    apellido: apellido ?? cliente.apellido,
+    documento: documento ?? cliente.documento,
+    email: email ?? cliente.email,
+    actualizadoEn: new Date().toISOString()
+  };
+
+  state.clientes[index] = clienteActualizado;
+  db.save(state);
+
+  res.json(clienteActualizado);
+});
+
 module.exports = router;
