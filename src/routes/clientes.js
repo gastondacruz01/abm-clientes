@@ -24,6 +24,41 @@ router.get('/', (_req, res) => {
   res.json(state.clientes);
 });
 
-// --- Los siguientes endpoints se agregan al implementar cada US ---
+// --- US-001: Alta de cliente ---
+router.post('/', (req, res) => {
+  const { nombre, apellido, documento, email } = req.body;
+
+  const camposFaltantes = [];
+  if (!nombre) camposFaltantes.push('nombre');
+  if (!apellido) camposFaltantes.push('apellido');
+  if (!documento) camposFaltantes.push('documento');
+  if (!email) camposFaltantes.push('email');
+
+  if (camposFaltantes.length > 0) {
+    return res.status(400).json({ error: `Campo obligatorio faltante: ${camposFaltantes[0]}` });
+  }
+
+  const state = db.load();
+
+  const existente = state.clientes.find(c => c.documento === documento);
+  if (existente) {
+    return res.status(409).json({ error: 'Ya existe un cliente con ese documento' });
+  }
+
+  state.seq += 1;
+  const nuevoCliente = {
+    id: state.seq,
+    nombre,
+    apellido,
+    documento,
+    email,
+    creadoEn: new Date().toISOString()
+  };
+
+  state.clientes.push(nuevoCliente);
+  db.save(state);
+
+  res.status(201).json(nuevoCliente);
+});
 
 module.exports = router;
