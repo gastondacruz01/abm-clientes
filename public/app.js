@@ -7,6 +7,10 @@
 
 const API = '/api/clientes';
 
+// US-003: Estado del formulario (modo alta o edición)
+let modoEdicion = false;
+let clienteEditandoId = null;
+
 async function cargarClientes() {
   const res = await fetch(API);
   const clientes = await res.json();
@@ -33,10 +37,15 @@ function renderTabla(clientes) {
       <td>${escapeHtml(c.documento)}</td>
       <td>${escapeHtml(c.email)}</td>
       <td class="acciones">
-        <!-- US-003: botón Editar / US-004: botón Eliminar -->
+        <button class="btn-editar" data-id="${c.id}" data-nombre="${escapeHtml(c.nombre)}" data-apellido="${escapeHtml(c.apellido)}" data-documento="${escapeHtml(c.documento)}" data-email="${escapeHtml(c.email)}">Editar</button>
+        <!-- US-004: botón Eliminar -->
       </td>`;
     tbody.appendChild(tr);
   }
+
+  document.querySelectorAll('.btn-editar').forEach(btn => {
+    btn.addEventListener('click', () => editarCliente(btn.dataset));
+  });
 }
 
 function escapeHtml(str = '') {
@@ -45,7 +54,34 @@ function escapeHtml(str = '') {
   }[m]));
 }
 
-// US-001: Alta de cliente
+// US-003: Función para entrar en modo edición
+function editarCliente(dataset) {
+  modoEdicion = true;
+  clienteEditandoId = dataset.id;
+
+  document.getElementById('nombre').value = dataset.nombre;
+  document.getElementById('apellido').value = dataset.apellido;
+  document.getElementById('documento').value = dataset.documento;
+  document.getElementById('email').value = dataset.email;
+
+  document.getElementById('form-title').textContent = 'Editar cliente';
+  document.getElementById('btn-cancelar').classList.remove('hidden');
+  document.getElementById('form-error').classList.add('hidden');
+}
+
+// US-003: Función para volver al modo alta
+function volverModoAlta() {
+  modoEdicion = false;
+  clienteEditandoId = null;
+  document.getElementById('form-title').textContent = 'Nuevo cliente';
+  document.getElementById('btn-cancelar').classList.add('hidden');
+  limpiarFormulario();
+}
+
+// US-003: Handler del botón Cancelar
+document.getElementById('btn-cancelar').addEventListener('click', volverModoAlta);
+
+// US-001 + US-003: Alta y edición de cliente
 document.getElementById('btn-guardar').addEventListener('click', async () => {
   const nombre = document.getElementById('nombre').value.trim();
   const apellido = document.getElementById('apellido').value.trim();
@@ -56,8 +92,11 @@ document.getElementById('btn-guardar').addEventListener('click', async () => {
   formError.classList.add('hidden');
 
   try {
-    const res = await fetch(API, {
-      method: 'POST',
+    const url = modoEdicion ? `${API}/${clienteEditandoId}` : API;
+    const method = modoEdicion ? 'PUT' : 'POST';
+
+    const res = await fetch(url, {
+      method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nombre, apellido, documento, email })
     });
@@ -69,7 +108,11 @@ document.getElementById('btn-guardar').addEventListener('click', async () => {
       return;
     }
 
-    limpiarFormulario();
+    if (modoEdicion) {
+      volverModoAlta();
+    } else {
+      limpiarFormulario();
+    }
     cargarClientes();
   } catch (err) {
     formError.textContent = 'Error de conexión';
