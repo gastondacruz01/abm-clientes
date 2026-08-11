@@ -1,0 +1,15 @@
+---
+description: Cómo escribir y ejecutar pruebas funcionales a partir de criterios Gherkin.
+globs: ["tests/**/*.js"]
+alwaysApply: false
+---
+
+# Testing
+
+- Framework: Jest + Supertest contra `createApp()` (sin levantar servidor real).
+- Un `describe('US-XXX — <nombre>')` por User Story. Un `test()` por escenario Gherkin.
+- El nombre del test replica el escenario: `'Given datos válidos, When POST /api/clientes, Then 201 y cliente con id'`.
+- La base de datos de test se aísla con `process.env.DB_FILE` y se resetea en `beforeEach` (ya configurado en `tests/clientes.test.js`).
+- Cobertura mínima por US: todos los escenarios del .docx + al menos un caso borde adicional propuesto por el agente.
+- Nunca borrar ni modificar tests de US anteriores para "hacer pasar" una nueva US: si un test viejo rompe, la implementación nueva está mal o hay conflicto de criterios → avisar al usuario.
+- Ejecutar `npm test` y pegar el resumen del resultado en la respuesta al cerrar cada US.

@@ -1,0 +1,21 @@
+{
+  "name": "abm-clientes",
+  "version": "0.1.0",
+  "description": "ABM de Clientes - Proyecto base SDLC con User Stories (Gherkin) y agente Cursor",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "jest --runInBand",
+    "test:watch": "jest --watch"
+  },
+  "keywords": ["abm", "crud", "sdlc", "gherkin"],
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  }
+}

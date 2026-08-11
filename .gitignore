@@ -1,0 +1,6 @@
+node_modules/
+src/data/clientes.json
+coverage/
+.env
+*.log
+.DS_Store

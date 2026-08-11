@@ -1,0 +1,22 @@
+---
+description: Convenciones de Git y GitHub para impactar cambios al repositorio.
+alwaysApply: true
+---
+
+# Git workflow
+
+- Rama principal: `main` (siempre deployable, tests en verde).
+- Una rama por US: `feature/US-XXX-alta-cliente`, `fix/US-XXX-...` para correcciones.
+- Commits atómicos con prefijo de US: `US-001: agrega POST /api/clientes con validaciones`.
+- Antes de commitear: correr `npm test`. Si hay tests rojos, no commitear.
+- Nunca hacer push forzado a `main`.
+- Merge a `main` vía Pull Request. Título del PR: `[US-XXX] <nombre de la US>`.
+- Cuerpo del PR (plantilla):
+  - **User Story:** ID y narrativa
+  - **Escenarios cubiertos:** lista de Given/When/Then implementados
+  - **Cómo probar manualmente:** pasos concretos con `npm start`
+  - **Checklist DoD:** marcado
+
+# Comandos que el agente puede ejecutar
+
+El agente puede ejecutar `git status`, `git add`, `git commit`, `git checkout -b`, `git push` y `npm test` / `npm start` cuando el usuario lo pida o al cerrar una US. Confirmar con el usuario antes de hacer `git push`.

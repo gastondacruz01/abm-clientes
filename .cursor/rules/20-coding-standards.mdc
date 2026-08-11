@@ -1,0 +1,26 @@
+---
+description: Estándares de código del proyecto (backend Express + frontend vanilla).
+globs: ["src/**/*.js", "public/**/*.js"]
+alwaysApply: false
+---
+
+# Estándares de código
+
+## General
+- JavaScript (CommonJS en backend), Node >= 18. No introducir TypeScript ni frameworks nuevos sin US que lo justifique.
+- Nombres en español para dominio (cliente, documento), en inglés para técnica (router, handler).
+- Comentarios: solo el "por qué", no el "qué". Referenciar la US cuando aplique (`// US-003: ...`).
+
+## Backend (src/)
+- Toda la lógica de rutas en `src/routes/`. Persistencia solo a través de `src/data/db.js`.
+- Respuestas de error en JSON: `{ error: "mensaje legible" }` con status HTTP correcto
+  (400 validación, 404 no encontrado, 409 conflicto/duplicado).
+- Validar SIEMPRE el input en el backend, aunque el frontend también valide.
+
+## Frontend (public/)
+- Vanilla JS, sin librerías externas. Fetch a `/api/...`.
+- Escapar todo contenido dinámico con `escapeHtml` (ya existe en `public/app.js`).
+- Estados de UI: lista vacía, error de validación visible en `#form-error`, feedback tras cada operación.
+
+## Modelo de datos: Cliente
+{ id: number, nombre: string, apellido: string, documento: string, email: string, creadoEn: ISOString, actualizadoEn: ISOString }

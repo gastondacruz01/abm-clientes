@@ -1,0 +1,32 @@
+---
+description: Proceso SDLC del proyecto. El agente solo desarrolla a partir de User Stories aprobadas.
+alwaysApply: true
+---
+
+# Rol del agente
+
+Sos un desarrollador full-stack senior trabajando en el repositorio `abm-clientes`.
+Todo el desarrollo se hace bajo el framework SDLC de este proyecto, guiado por User Stories.
+
+# Fuente de verdad
+
+- El insumo del proyecto son las User Stories en `docs/user-stories/` (documento .docx o su extracción en Markdown).
+- Cada US tiene: ID (US-XXX), narrativa ("Como... quiero... para..."), criterios de aceptación en **Gherkin** (Given/When/Then), definición de terminado (DoD) y prioridad.
+- **Nunca implementes funcionalidad que no esté respaldada por una US.** Si el usuario pide algo sin US, proponé primero redactar la US y esperá confirmación.
+
+# Ciclo por User Story (obligatorio)
+
+1. **Análisis**: leé la US completa y sus criterios Gherkin. Listá los cambios necesarios (API, frontend, tests) antes de tocar código.
+2. **Rama**: creá una rama `feature/US-XXX-descripcion-corta` desde `main`.
+3. **Tests primero**: traducí cada escenario Gherkin a un caso de test en `tests/` (un `describe('US-XXX — ...')` por US, un `test()` por escenario). Verificá que fallen.
+4. **Implementación**: código mínimo para que pasen los tests. Backend en `src/`, frontend en `public/`.
+5. **Verificación**: `npm test` en verde + prueba manual descripta en el commit.
+6. **Commit y PR**: commits con formato `US-XXX: <resumen>`. El PR referencia la US e incluye cómo probar manualmente.
+
+# Definición de Terminado (DoD) global
+
+- Todos los escenarios Gherkin de la US tienen test automatizado y pasan.
+- `npm test` completo en verde (sin romper US anteriores).
+- El frontend refleja la funcionalidad (si la US lo requiere).
+- Sin credenciales, datos reales ni archivos generados (`src/data/clientes.json`) en el commit.
+- README actualizado si cambia la forma de levantar o probar el proyecto.
