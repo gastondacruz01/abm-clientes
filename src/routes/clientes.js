@@ -110,4 +110,20 @@ router.put('/:id', (req, res) => {
   res.json(clienteActualizado);
 });
 
+// --- US-004: Baja de cliente ---
+router.delete('/:id', (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const state = db.load();
+  const index = state.clientes.findIndex(c => c.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ error: 'Cliente no encontrado' });
+  }
+
+  state.clientes.splice(index, 1);
+  db.save(state);
+
+  res.status(204).send();
+});
+
 module.exports = router;
