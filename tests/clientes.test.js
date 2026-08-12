@@ -89,6 +89,32 @@ describe('US-001 — Alta de cliente', () => {
   });
 });
 
+describe('US-002 — Detalle de cliente', () => {
+  test('Escenario 1: Given cliente con id 1, When GET /api/clientes/1, Then 200 con todos los campos', async () => {
+    const cliente = { nombre: 'Juan', apellido: 'Pérez', documento: '30123456', email: 'juan@mail.com' };
+    await request(app).post('/api/clientes').send(cliente);
+
+    const res = await request(app).get('/api/clientes/1');
+
+    expect(res.status).toBe(200);
+    expect(res.body).toMatchObject({
+      id: 1,
+      nombre: 'Juan',
+      apellido: 'Pérez',
+      documento: '30123456',
+      email: 'juan@mail.com'
+    });
+    expect(res.body.creadoEn).toBeDefined();
+  });
+
+  test('Escenario 2: Given cliente inexistente, When GET /api/clientes/999, Then 404 con error', async () => {
+    const res = await request(app).get('/api/clientes/999');
+
+    expect(res.status).toBe(404);
+    expect(res.body.error).toBe('Cliente no encontrado');
+  });
+});
+
 describe('US-003 — Modificación de cliente', () => {
   test('Escenario 1: Given cliente existente, When PUT con datos válidos, Then 200 con actualizadoEn refrescado y creadoEn sin cambios', async () => {
     const cliente = { nombre: 'Juan', apellido: 'Pérez', documento: '30123456', email: 'juan@mail.com' };

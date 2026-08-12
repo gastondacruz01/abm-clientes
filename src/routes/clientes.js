@@ -61,6 +61,19 @@ router.post('/', (req, res) => {
   res.status(201).json(nuevoCliente);
 });
 
+// --- US-002: Detalle de cliente ---
+router.get('/:id', (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const state = db.load();
+  const cliente = state.clientes.find(c => c.id === id);
+
+  if (!cliente) {
+    return res.status(404).json({ error: 'Cliente no encontrado' });
+  }
+
+  res.json(cliente);
+});
+
 // --- US-003: Modificación de cliente ---
 router.put('/:id', (req, res) => {
   const id = parseInt(req.params.id, 10);
