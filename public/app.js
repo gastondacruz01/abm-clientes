@@ -38,7 +38,7 @@ function renderTabla(clientes) {
       <td>${escapeHtml(c.email)}</td>
       <td class="acciones">
         <button class="btn-editar" data-id="${c.id}" data-nombre="${escapeHtml(c.nombre)}" data-apellido="${escapeHtml(c.apellido)}" data-documento="${escapeHtml(c.documento)}" data-email="${escapeHtml(c.email)}">Editar</button>
-        <!-- US-004: botón Eliminar -->
+        <button class="btn-eliminar danger" data-id="${c.id}" data-nombre="${escapeHtml(c.nombre)}" data-apellido="${escapeHtml(c.apellido)}">Eliminar</button>
       </td>`;
     tbody.appendChild(tr);
   }
@@ -46,6 +46,30 @@ function renderTabla(clientes) {
   document.querySelectorAll('.btn-editar').forEach(btn => {
     btn.addEventListener('click', () => editarCliente(btn.dataset));
   });
+
+  // US-004: Baja con confirmación
+  document.querySelectorAll('.btn-eliminar').forEach(btn => {
+    btn.addEventListener('click', () => eliminarCliente(btn.dataset));
+  });
+}
+
+// US-004: Eliminar cliente con confirmación
+async function eliminarCliente(dataset) {
+  const nombreCompleto = `${dataset.nombre} ${dataset.apellido}`.trim();
+  const ok = confirm(`¿Eliminar al cliente ${nombreCompleto}?`);
+  if (!ok) return;
+
+  const res = await fetch(`${API}/${dataset.id}`, { method: 'DELETE' });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    alert(data.error || 'No se pudo eliminar el cliente');
+    return;
+  }
+
+  if (modoEdicion && String(clienteEditandoId) === String(dataset.id)) {
+    volverModoAlta();
+  }
+  cargarClientes();
 }
 
 function escapeHtml(str = '') {

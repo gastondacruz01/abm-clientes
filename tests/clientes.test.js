@@ -151,3 +151,23 @@ describe('US-003 — Modificación de cliente', () => {
     expect(res.status).toBe(409);
   });
 });
+
+describe('US-004 — Baja de cliente', () => {
+  test('Escenario 1: Given cliente con id 1, When DELETE /api/clientes/1, Then 204 y ya no aparece en GET', async () => {
+    const cliente = { nombre: 'Juan', apellido: 'Pérez', documento: '30123456', email: 'juan@mail.com' };
+    await request(app).post('/api/clientes').send(cliente);
+
+    const res = await request(app).delete('/api/clientes/1');
+
+    expect(res.status).toBe(204);
+
+    const listado = await request(app).get('/api/clientes');
+    expect(listado.body).toHaveLength(0);
+  });
+
+  test('Escenario 2: Given cliente inexistente, When DELETE /api/clientes/999, Then 404', async () => {
+    const res = await request(app).delete('/api/clientes/999');
+
+    expect(res.status).toBe(404);
+  });
+});
