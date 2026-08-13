@@ -8,46 +8,70 @@
 </head>
 <body>
   <header>
-    <h1>ABM de Clientes</h1>
-    <p class="subtitle">Proyecto base SDLC — las funcionalidades se habilitan al implementar cada User Story</p>
+    <div class="header-row">
+      <div>
+        <h1 data-i18n="titulo">ABM de Clientes</h1>
+        <p class="subtitle" data-i18n="subtitulo">Proyecto base SDLC — las funcionalidades se habilitan al implementar cada User Story</p>
+      </div>
+      <!-- US-022: selector de idioma (hover abre el menú) -->
+      <div class="lang-switcher" id="lang-switcher">
+        <button type="button" id="btn-idioma" data-i18n-aria="cambiarIdioma" aria-label="Cambiar idioma" aria-haspopup="true" title="Idioma">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M2 12h20" />
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+          </svg>
+        </button>
+        <ul class="lang-menu" id="lang-menu" role="menu">
+          <li role="none"><button type="button" role="menuitem" data-lang="ja">Japonés</button></li>
+          <li role="none"><button type="button" role="menuitem" data-lang="es">Español</button></li>
+        </ul>
+      </div>
+    </div>
   </header>
 
   <main>
     <!-- US-001: Alta de cliente. El formulario existe pero el submit se implementa con la US. -->
     <section class="card" id="form-section">
-      <h2 id="form-title">Nuevo cliente</h2>
+      <h2 id="form-title" data-i18n="nuevoCliente">Nuevo cliente</h2>
       <div class="form-grid">
-        <label>Nombre <input type="text" id="nombre" placeholder="Juan" /></label>
-        <label>Apellido <input type="text" id="apellido" placeholder="Pérez" /></label>
-        <label>Documento <input type="text" id="documento" placeholder="30123456" /></label>
-        <label>Email <input type="email" id="email" placeholder="juan@mail.com" /></label>
+        <label><span data-i18n="nombre">Nombre</span> <input type="text" id="nombre" data-i18n-placeholder="placeholderNombre" placeholder="Juan" /></label>
+        <label><span data-i18n="apellido">Apellido</span> <input type="text" id="apellido" data-i18n-placeholder="placeholderApellido" placeholder="Pérez" /></label>
+        <label><span data-i18n="documento">Documento</span> <input type="text" id="documento" data-i18n-placeholder="placeholderDocumento" placeholder="30123456" /></label>
+        <label><span data-i18n="email">Email</span> <input type="email" id="email" data-i18n-placeholder="placeholderEmail" placeholder="juan@mail.com" /></label>
       </div>
       <div class="actions">
-        <button id="btn-guardar">Guardar</button>
-        <button id="btn-cancelar" class="secondary hidden">Cancelar</button>
+        <button id="btn-guardar" data-i18n="guardar">Guardar</button>
+        <button id="btn-cancelar" class="secondary hidden" data-i18n="cancelar">Cancelar</button>
       </div>
       <p id="form-error" class="error hidden"></p>
     </section>
 
     <!-- US-005: Búsqueda -->
     <section class="card">
-      <input type="search" id="buscador" placeholder="Buscar por nombre, apellido o documento... (US-005)" />
+      <input type="search" id="buscador" data-i18n-placeholder="buscar" placeholder="Buscar por nombre, apellido o documento... (US-005)" />
     </section>
 
     <section class="card">
-      <h2>Clientes</h2>
+      <h2 data-i18n="clientes">Clientes</h2>
       <table id="tabla-clientes">
         <thead>
           <tr>
-            <th>ID</th><th>Nombre</th><th>Apellido</th><th>Documento</th><th>Email</th><th>Acciones</th>
+            <th data-i18n="colId">ID</th>
+            <th data-i18n="nombre">Nombre</th>
+            <th data-i18n="apellido">Apellido</th>
+            <th data-i18n="documento">Documento</th>
+            <th data-i18n="email">Email</th>
+            <th data-i18n="colAcciones">Acciones</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
-      <p id="empty-state" class="hidden">No hay clientes cargados.</p>
+      <p id="empty-state" class="hidden" data-i18n="sinClientes">No hay clientes cargados.</p>
     </section>
   </main>
 
+  <script src="i18n.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

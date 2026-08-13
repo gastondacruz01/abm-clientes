@@ -10,6 +10,8 @@ const API = '/api/clientes';
 // US-003: Estado del formulario (modo alta o edición)
 let modoEdicion = false;
 let clienteEditandoId = null;
+// US-022: idioma activo de la UI (español por defecto)
+let idiomaActual = 'es';
 
 async function cargarClientes() {
   const res = await fetch(API);
@@ -37,8 +39,8 @@ function renderTabla(clientes) {
       <td>${escapeHtml(c.documento)}</td>
       <td>${escapeHtml(c.email)}</td>
       <td class="acciones">
-        <button class="btn-editar" data-id="${c.id}" data-nombre="${escapeHtml(c.nombre)}" data-apellido="${escapeHtml(c.apellido)}" data-documento="${escapeHtml(c.documento)}" data-email="${escapeHtml(c.email)}">Editar</button>
-        <button class="btn-eliminar danger" data-id="${c.id}" data-nombre="${escapeHtml(c.nombre)}" data-apellido="${escapeHtml(c.apellido)}">Eliminar</button>
+        <button class="btn-editar" data-id="${c.id}" data-nombre="${escapeHtml(c.nombre)}" data-apellido="${escapeHtml(c.apellido)}" data-documento="${escapeHtml(c.documento)}" data-email="${escapeHtml(c.email)}">${t(idiomaActual, 'editar')}</button>
+        <button class="btn-eliminar danger" data-id="${c.id}" data-nombre="${escapeHtml(c.nombre)}" data-apellido="${escapeHtml(c.apellido)}">${t(idiomaActual, 'eliminar')}</button>
       </td>`;
     tbody.appendChild(tr);
   }
@@ -56,13 +58,13 @@ function renderTabla(clientes) {
 // US-004: Eliminar cliente con confirmación
 async function eliminarCliente(dataset) {
   const nombreCompleto = `${dataset.nombre} ${dataset.apellido}`.trim();
-  const ok = confirm(`¿Eliminar al cliente ${nombreCompleto}?`);
+  const ok = confirm(t(idiomaActual, 'confirmarEliminar', { nombre: nombreCompleto }));
   if (!ok) return;
 
   const res = await fetch(`${API}/${dataset.id}`, { method: 'DELETE' });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    alert(data.error || 'No se pudo eliminar el cliente');
+    alert(data.error || t(idiomaActual, 'errorEliminar'));
     return;
   }
 
@@ -88,7 +90,7 @@ function editarCliente(dataset) {
   document.getElementById('documento').value = dataset.documento;
   document.getElementById('email').value = dataset.email;
 
-  document.getElementById('form-title').textContent = 'Editar cliente';
+  document.getElementById('form-title').textContent = t(idiomaActual, 'editarCliente');
   document.getElementById('btn-cancelar').classList.remove('hidden');
   document.getElementById('form-error').classList.add('hidden');
 }
@@ -97,7 +99,7 @@ function editarCliente(dataset) {
 function volverModoAlta() {
   modoEdicion = false;
   clienteEditandoId = null;
-  document.getElementById('form-title').textContent = 'Nuevo cliente';
+  document.getElementById('form-title').textContent = t(idiomaActual, 'nuevoCliente');
   document.getElementById('btn-cancelar').classList.add('hidden');
   limpiarFormulario();
 }
@@ -127,7 +129,7 @@ document.getElementById('btn-guardar').addEventListener('click', async () => {
 
     if (!res.ok) {
       const data = await res.json();
-      formError.textContent = data.error || 'Error al guardar el cliente';
+      formError.textContent = data.error || t(idiomaActual, 'errorGuardar');
       formError.classList.remove('hidden');
       return;
     }
@@ -139,17 +141,23 @@ document.getElementById('btn-guardar').addEventListener('click', async () => {
     }
     cargarClientes();
   } catch (err) {
-    formError.textContent = 'Error de conexión';
+    formError.textContent = t(idiomaActual, 'errorConexion');
     formError.classList.remove('hidden');
   }
 });
 
-function limpiarFormulario() {
-  document.getElementById('nombre').value = '';
-  document.getElementById('apellido').value = '';
-  document.getElementById('documento').value = '';
-  document.getElementById('email').value = '';
-  document.getElementById('form-error').classList.add('hidden');
+function actualizarTituloForm() {
+  const clave = modoEdicion ? 'editarCliente' : 'nuevoCliente';
+  document.getElementById('form-title').textContent = t(idiomaActual, clave);
 }
+
+// US-022: cambio de idioma desde el ícono del header
+document.querySelectorAll('#lang-menu [data-lang]').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    idiomaActual = aplicarIdioma(btn.dataset.lang);
+    actualizarTituloForm();
+    cargarClientes();
+  });
+});
 
 cargarClientes();
