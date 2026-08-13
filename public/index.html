@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,21 +13,35 @@
         <h1 data-i18n="titulo">ABM de Clientes</h1>
         <p class="subtitle" data-i18n="subtitulo">Proyecto base SDLC — las funcionalidades se habilitan al implementar cada User Story</p>
       </div>
-      <!-- US-022: selector de idioma (hover abre el menú) -->
-      <div class="lang-switcher" id="lang-switcher">
-        <button type="button" id="btn-idioma" data-i18n-aria="cambiarIdioma" aria-label="Cambiar idioma" aria-haspopup="true" title="Idioma">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <circle cx="12" cy="12" r="10" />
-            <path d="M2 12h20" />
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-          </svg>
-        </button>
-        <ul class="lang-menu" id="lang-menu" role="menu">
-          <li role="none"><button type="button" role="menuitem" data-lang="ja">Japonés</button></li>
-          <li role="none"><button type="button" role="menuitem" data-lang="zh">Chino</button></li>
-          <li role="none"><button type="button" role="menuitem" data-lang="pt">Portugués</button></li>
-          <li role="none"><button type="button" role="menuitem" data-lang="es">Español</button></li>
-        </ul>
+      <div class="header-actions">
+        <!-- US-027: selector de tema claro/oscuro -->
+        <div class="theme-switcher" id="theme-switcher">
+          <label class="theme-label" for="selector-tema">Tema</label>
+          <select id="selector-tema" class="theme-select" aria-label="Tema">
+            <option value="light">Claro</option>
+            <option value="dark">Oscuro</option>
+          </select>
+          <div class="theme-buttons" role="group" aria-label="Tema">
+            <button type="button" data-theme-option="light" aria-pressed="true">Claro</button>
+            <button type="button" data-theme-option="dark" aria-pressed="false">Oscuro</button>
+          </div>
+        </div>
+        <!-- US-022: selector de idioma (hover abre el menú) -->
+        <div class="lang-switcher" id="lang-switcher">
+          <button type="button" id="btn-idioma" data-i18n-aria="cambiarIdioma" aria-label="Cambiar idioma" aria-haspopup="true" title="Idioma">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M2 12h20" />
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            </svg>
+          </button>
+          <ul class="lang-menu" id="lang-menu" role="menu">
+            <li role="none"><button type="button" role="menuitem" data-lang="ja">Japonés</button></li>
+            <li role="none"><button type="button" role="menuitem" data-lang="zh">Chino</button></li>
+            <li role="none"><button type="button" role="menuitem" data-lang="pt">Portugués</button></li>
+            <li role="none"><button type="button" role="menuitem" data-lang="es">Español</button></li>
+          </ul>
+        </div>
       </div>
     </div>
   </header>
@@ -74,6 +88,7 @@
   </main>
 
   <script src="i18n.js"></script>
+  <script src="tema.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

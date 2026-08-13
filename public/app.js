@@ -13,6 +13,9 @@ let clienteEditandoId = null;
 // US-022: idioma activo de la UI (español por defecto)
 let idiomaActual = 'es';
 
+// US-027: aplicar tema guardado (o claro por defecto) al cargar
+aplicarTema(leerTema());
+
 async function cargarClientes() {
   const res = await fetch(API);
   const clientes = await res.json();
@@ -158,6 +161,14 @@ document.querySelectorAll('#lang-menu [data-lang]').forEach((btn) => {
     actualizarTituloForm();
     cargarClientes();
   });
+});
+
+// US-027: cambio de tema desde el selector
+document.getElementById('selector-tema').addEventListener('change', (e) => {
+  aplicarTema(e.target.value);
+});
+document.querySelectorAll('[data-theme-option]').forEach((btn) => {
+  btn.addEventListener('click', () => aplicarTema(btn.dataset.themeOption));
 });
 
 cargarClientes();
