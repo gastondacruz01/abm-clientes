@@ -117,10 +117,12 @@ button {
   box-shadow: 0 1px 2px rgba(79, 70, 229, 0.2);
 }
 
+/* US-020 / Jira SCRUM-1: hover de botones en verde */
 button:hover {
-  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: #ffffff;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
 }
 
 button:active {
@@ -135,9 +137,10 @@ button.secondary {
 }
 
 button.secondary:hover {
-  background: #e2e8f0;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: #ffffff;
   transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
 }
 
 button.danger {
@@ -146,8 +149,8 @@ button.danger {
 }
 
 button.danger:hover {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
 }
 
 table {

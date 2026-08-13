@@ -668,3 +668,20 @@ Modelo de datos: `{ id, nombre, apellido, documento, email, creadoEn, actualizad
 
 **Notas técnicas:** el insumo reserva el panel a supervisor y administrador. "Bajas" del gráfico se interpretan como envíos a papelera (US-013), no como inactivaciones de US-009. La exportación a imagen es del lado cliente (captura del contenedor del panel).
 
+---
+
+## US-020 — Cambiar el color del fondo de los botones (hover)
+**Estado:** Aprobada
+**Prioridad:** Baja · **Estimación:** 1 pt · **Alcance:** frontend (`public/styles.css`)
+**Origen:** Jira SCRUM-1
+
+**Como** usuario de la aplicación
+**Quiero** que cambie el color de los botones al posicionarme sobre alguno
+**Para** que quede más estética la aplicación.
+
+### Criterios de aceptación
+**Escenario 1 — Cambio de color de los botones**
+- **Given** estoy en la interfaz de ABM clientes
+- **When** me posiciono sobre cualquier botón (hover)
+- **Then** el color de fondo del botón cambia a verde
+
