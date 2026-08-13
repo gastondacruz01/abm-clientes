@@ -711,3 +711,29 @@ Modelo de datos: `{ id, nombre, apellido, documento, email, creadoEn, actualizad
 
 **Notas técnicas:** el idioma por defecto es español. El selector vive en el header; el menú se abre al posicionarse sobre el ícono. No se persiste la preferencia (fuera de alcance de esta US). No se agrega inglés.
 
+---
+
+## US-024 — Cambiar a idioma Chino
+**Estado:** Aprobada
+**Prioridad:** Media · **Estimación:** 2 pts · **Alcance:** frontend (`public/index.html`, `public/app.js`, `public/i18n.js`)
+**Origen:** Jira SCRUM-7
+
+**Como** usuario de la aplicación
+**Quiero** cambiar al idioma Chino
+**Para** ver cómo se muestran las etiquetas en ese idioma.
+
+### Criterios de aceptación
+**Escenario 1 — Cambiar idioma a Chino**
+- **Given** estoy en la interfaz de ABM clientes
+- **When** me posiciono sobre el ícono de cambio de idioma y elijo "Chino"
+- **Then** las etiquetas visibles de la interfaz se muestran en chino simplificado (título, formulario, botones, tabla)
+- **And** el documento HTML tiene `lang="zh"`
+
+**Escenario 2 — Cambiar idioma a Español**
+- **Given** la interfaz está en chino
+- **When** me posiciono sobre el ícono de cambio de idioma y elijo "Español"
+- **Then** las etiquetas visibles de la interfaz se muestran en español
+- **And** el documento HTML tiene `lang="es"`
+
+**Notas técnicas:** reutiliza el selector de idioma de US-022. El chino es simplificado (`zh`). Japonés y Español siguen disponibles. El idioma por defecto sigue siendo español. No se persiste la preferencia.
+

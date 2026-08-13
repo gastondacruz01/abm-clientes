@@ -1,4 +1,4 @@
-// US-022: diccionario es/ja y aplicación de etiquetas en la UI.
+// US-022 / US-024: diccionario es/ja/zh y aplicación de etiquetas en la UI.
 const TRADUCCIONES = {
   es: {
     titulo: 'ABM de Clientes',
@@ -55,6 +55,34 @@ const TRADUCCIONES = {
     placeholderApellido: '山田',
     placeholderDocumento: '30123456',
     placeholderEmail: 'taro@mail.com',
+  },
+  zh: {
+    titulo: '客户管理',
+    subtitulo: 'SDLC基础项目 — 每实现一个用户故事即启用对应功能',
+    nuevoCliente: '新建客户',
+    editarCliente: '编辑客户',
+    nombre: '名',
+    apellido: '姓',
+    documento: '证件号码',
+    email: '邮箱',
+    guardar: '保存',
+    cancelar: '取消',
+    buscar: '按姓名或证件号码搜索...',
+    clientes: '客户列表',
+    colId: 'ID',
+    colAcciones: '操作',
+    sinClientes: '暂无客户。',
+    editar: '编辑',
+    eliminar: '删除',
+    confirmarEliminar: '确定删除客户「{nombre}」吗？',
+    errorEliminar: '无法删除客户',
+    errorGuardar: '保存客户时出错',
+    errorConexion: '连接错误',
+    cambiarIdioma: '更改语言',
+    placeholderNombre: '伟',
+    placeholderApellido: '王',
+    placeholderDocumento: '30123456',
+    placeholderEmail: 'wei@mail.com',
   },
 };
 
