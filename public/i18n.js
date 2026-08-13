@@ -1,4 +1,4 @@
-// US-022 / US-024: diccionario es/ja/zh y aplicación de etiquetas en la UI.
+// US-021 / US-022 / US-024: diccionario es/ja/zh/pt y aplicación de etiquetas en la UI.
 const TRADUCCIONES = {
   es: {
     titulo: 'ABM de Clientes',
@@ -83,6 +83,34 @@ const TRADUCCIONES = {
     placeholderApellido: '王',
     placeholderDocumento: '30123456',
     placeholderEmail: 'wei@mail.com',
+  },
+  pt: {
+    titulo: 'Cadastro de Clientes',
+    subtitulo: 'Projeto base SDLC — as funcionalidades são habilitadas ao implementar cada User Story',
+    nuevoCliente: 'Novo cliente',
+    editarCliente: 'Editar cliente',
+    nombre: 'Nome',
+    apellido: 'Sobrenome',
+    documento: 'Documento',
+    email: 'E-mail',
+    guardar: 'Salvar',
+    cancelar: 'Cancelar',
+    buscar: 'Buscar por nome, sobrenome ou documento...',
+    clientes: 'Clientes',
+    colId: 'ID',
+    colAcciones: 'Ações',
+    sinClientes: 'Não há clientes cadastrados.',
+    editar: 'Editar',
+    eliminar: 'Excluir',
+    confirmarEliminar: 'Excluir o cliente {nombre}?',
+    errorEliminar: 'Não foi possível excluir o cliente',
+    errorGuardar: 'Erro ao salvar o cliente',
+    errorConexion: 'Erro de conexão',
+    cambiarIdioma: 'Mudar idioma',
+    placeholderNombre: 'João',
+    placeholderApellido: 'Silva',
+    placeholderDocumento: '30123456',
+    placeholderEmail: 'joao@mail.com',
   },
 };
 

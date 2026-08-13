@@ -713,6 +713,32 @@ Modelo de datos: `{ id, nombre, apellido, documento, email, creadoEn, actualizad
 
 ---
 
+## US-021 — Cambiar a idioma Portugués
+**Estado:** Aprobada
+**Prioridad:** Media · **Estimación:** 2 pts · **Alcance:** frontend (`public/index.html`, `public/i18n.js`)
+**Origen:** Jira SCRUM-5
+
+**Como** usuario de la aplicación
+**Quiero** cambiar al idioma Portugués
+**Para** ver cómo se muestran las etiquetas en ese idioma.
+
+### Criterios de aceptación
+**Escenario 1 — Cambiar idioma a Portugués**
+- **Given** estoy en la interfaz de ABM clientes
+- **When** me posiciono sobre el ícono de cambio de idioma y elijo "Portugués"
+- **Then** las etiquetas visibles de la interfaz se muestran en portugués (título, formulario, botones, tabla)
+- **And** el documento HTML tiene `lang="pt"`
+
+**Escenario 2 — Cambiar idioma a Español**
+- **Given** la interfaz está en portugués
+- **When** me posiciono sobre el ícono de cambio de idioma y elijo "Español"
+- **Then** las etiquetas visibles de la interfaz se muestran en español
+- **And** el documento HTML tiene `lang="es"`
+
+**Notas técnicas:** reutiliza el selector de idioma de US-022. El portugués usa `pt`. Japonés, Chino y Español siguen disponibles. El idioma por defecto sigue siendo español. No se persiste la preferencia.
+
+---
+
 ## US-024 — Cambiar a idioma Chino
 **Estado:** Aprobada
 **Prioridad:** Media · **Estimación:** 2 pts · **Alcance:** frontend (`public/index.html`, `public/app.js`, `public/i18n.js`)
