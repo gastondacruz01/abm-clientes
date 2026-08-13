@@ -685,3 +685,29 @@ Modelo de datos: `{ id, nombre, apellido, documento, email, creadoEn, actualizad
 - **When** me posiciono sobre cualquier botón (hover)
 - **Then** el color de fondo del botón cambia a verde
 
+---
+
+## US-022 — Cambiar a idioma Japonés
+**Estado:** Aprobada
+**Prioridad:** Media · **Estimación:** 2 pts · **Alcance:** frontend (`public/index.html`, `public/app.js`, `public/i18n.js`, `public/styles.css`)
+**Origen:** AzDO #1665465
+
+**Como** usuario de la aplicación
+**Quiero** cambiar al idioma Japonés
+**Para** ver cómo se muestran las etiquetas en ese idioma.
+
+### Criterios de aceptación
+**Escenario 1 — Cambiar idioma a Japonés**
+- **Given** estoy en la interfaz de ABM clientes
+- **When** me posiciono sobre el ícono de cambio de idioma y elijo "Japonés"
+- **Then** las etiquetas visibles de la interfaz se muestran en japonés (título, formulario, botones, tabla)
+- **And** el documento HTML tiene `lang="ja"`
+
+**Escenario 2 — Cambiar idioma a Español**
+- **Given** la interfaz está en japonés
+- **When** me posiciono sobre el ícono de cambio de idioma y elijo "Español"
+- **Then** las etiquetas visibles de la interfaz se muestran en español
+- **And** el documento HTML tiene `lang="es"`
+
+**Notas técnicas:** el idioma por defecto es español. El selector vive en el header; el menú se abre al posicionarse sobre el ícono. No se persiste la preferencia (fuera de alcance de esta US). No se agrega inglés.
+

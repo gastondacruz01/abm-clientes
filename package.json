@@ -7,15 +7,32 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
     "test": "jest --runInBand",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:demo": "PW_SLOWMO=800 playwright test --headed"
   },
-  "keywords": ["abm", "crud", "sdlc", "gherkin"],
+  "keywords": [
+    "abm",
+    "crud",
+    "sdlc",
+    "gherkin"
+  ],
   "license": "MIT",
   "dependencies": {
     "express": "^4.19.2"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.5.0",
+    "@playwright/test": "^1.62.1",
     "jest": "^29.7.0",
     "supertest": "^7.0.0"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/tests/e2e/"
+    ]
   }
 }
