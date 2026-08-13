@@ -763,3 +763,131 @@ Modelo de datos: `{ id, nombre, apellido, documento, email, creadoEn, actualizad
 
 **Notas técnicas:** reutiliza el selector de idioma de US-022. El chino es simplificado (`zh`). Japonés y Español siguen disponibles. El idioma por defecto sigue siendo español. No se persiste la preferencia.
 
+---
+
+> **Versión 1.3** — agrega US-025 a US-027 en estado Borrador, generadas desde `docs/insumos/manual-abm-clientes.md`. No modifica US existentes.
+
+---
+
+## US-025 — Autenticación, perfiles y cierre de sesión por inactividad
+**Estado:** Borrador
+**Prioridad:** Alta · **Estimación:** 5 pts · **Endpoint:** `POST /api/auth/login` · `POST /api/auth/logout` · `GET /api/auth/sesion`
+**Origen:** docs/insumos/manual-abm-clientes.md (secciones 2 y 7)
+
+**Como** usuario del sistema
+**Quiero** iniciar sesión con un perfil (operador, supervisor o administrador) y que la sesión se cierre tras 30 minutos de inactividad
+**Para** que cada persona vea solo las acciones de su rol y la sesión no quede abierta sin control.
+
+### Criterios de aceptación
+**Escenario 1 — Login exitoso e identidad visible**
+- **Given** un usuario "ana" con perfil `supervisor` y contraseña válida
+- **When** envío `POST /api/auth/login` con `{ "usuario": "ana", "password": "<válida>" }`
+- **Then** recibo status 200 con `{ usuario, nombre, perfil: "supervisor" }` y una sesión (cookie o token)
+- **And** `GET /api/auth/sesion` devuelve status 200 con esos mismos datos
+- **Given** la pantalla principal con sesión iniciada
+- **Then** en la esquina superior derecha se muestra el nombre del usuario y su perfil
+
+**Escenario 2 — Credenciales inválidas**
+- **Given** un usuario existente
+- **When** envío `POST /api/auth/login` con password incorrecta o un usuario inexistente
+- **Then** recibo status 401 con `{ error: "Credenciales inválidas" }`
+- **And** `GET /api/auth/sesion` sin login (o tras logout) devuelve status 401
+- **When** envío `POST /api/auth/logout` con sesión activa
+- **Then** recibo status 204 y las siguientes peticiones autenticadas responden 401
+
+**Escenario 3 — Operador no puede eliminar ni acceder a herramientas de supervisor**
+- **Given** una sesión de perfil `operador` y un cliente existente con id 1
+- **When** envío `DELETE /api/clientes/1`
+- **Then** recibo status 403 con `{ error: "Acción no permitida para este perfil" }`
+- **And** el cliente sigue en `GET /api/clientes`
+- **Given** la tabla de clientes con sesión de operador
+- **Then** no se muestra el botón "Eliminar" ni el acceso a Papelera, importación masiva ni Indicadores
+- **Given** una sesión de perfil `supervisor` y el mismo cliente
+- **When** envío `DELETE /api/clientes/1`
+- **Then** recibo status 200 (envío a papelera, US-013)
+
+**Escenario 4 — Aviso y cierre por inactividad**
+- **Given** una sesión iniciada cuya inactividad restante es de 2 minutos
+- **Then** la UI muestra el mensaje "Tu sesión expirará en 2 minutos"
+- **Given** una sesión vencida (30 minutos sin actividad, o `expiraEn` en el pasado)
+- **When** consulto un endpoint autenticado (p. ej. `GET /api/auth/sesion` o `GET /api/clientes`)
+- **Then** recibo status 401, la sesión se cierra y la UI solicita nueva autenticación
+
+**Notas técnicas:** el insumo no define mecanismo de login ni alta de usuarios. Esta US asume usuario+password y tres perfiles fijos (`operador`, `supervisor`, `administrador`). La gestión de usuarios (CRUD de cuentas) queda fuera: seed de desarrollo. Timeout de inactividad: 30 minutos (configurable en tests, p. ej. `SESSION_INACTIVIDAD_MS`). **Conflictos:** US-004 permite eliminar al operador; con esta US el operador recibe 403. US-013, US-014 y US-018 reservan acciones al supervisor: esta US materializa el chequeo de perfil.
+
+---
+
+## US-026 — Exportación a Excel (.xlsx)
+**Estado:** Borrador
+**Prioridad:** Media · **Estimación:** 3 pts · **Endpoint:** `GET /api/clientes/export.xlsx`
+**Origen:** docs/insumos/manual-abm-clientes.md (sección 4.2)
+
+**Como** supervisor del sistema
+**Quiero** exportar el listado vigente a un archivo Excel (.xlsx) con formato de tabla
+**Para** analizar la cartera en Excel con columnas tabulares, además del CSV disponible para cualquier usuario (US-010).
+
+### Criterios de aceptación
+**Escenario 1 — Exportación completa en xlsx**
+- **Given** clientes cargados y una sesión de perfil `supervisor`
+- **When** consulto `GET /api/clientes/export.xlsx`
+- **Then** recibo status 200 con `Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`
+- **And** la cabecera `Content-Disposition` incluye el nombre `clientes-AAAA-MM-DD.xlsx` (fecha del día)
+- **And** el archivo es un xlsx válido, con fila de encabezados, una fila por cliente y formato de tabla (Table de Excel)
+
+**Escenario 2 — Exportación respetando filtros**
+- **Given** clientes cargados y sesión de supervisor
+- **When** consulto `GET /api/clientes/export.xlsx?q=per&estado=activos`
+- **Then** el xlsx contiene solo los registros que cumplen esos filtros (misma lógica que US-010 / US-005 / US-009)
+
+**Escenario 3 — Perfil no autorizado y lista vacía**
+- **Given** una sesión de perfil `operador`
+- **When** consulto `GET /api/clientes/export.xlsx`
+- **Then** recibo status 403 con `{ error: "Acción no permitida para este perfil" }`
+- **Given** una sesión de supervisor y ningún cliente (o filtros sin coincidencias)
+- **When** consulto el export xlsx
+- **Then** recibo status 200 con un xlsx válido que solo incluye la fila de encabezados
+
+**Escenario 4 — Exportación desde la UI**
+- **Given** la pantalla principal con sesión de supervisor
+- **Then** se muestra el botón "Exportar Excel" además de "Exportar CSV"
+- **When** presiono "Exportar Excel"
+- **Then** el navegador descarga el xlsx aplicando los filtros de búsqueda y estado vigentes
+- **Given** una sesión de operador
+- **Then** no se muestra el botón "Exportar Excel" (el CSV de US-010 sigue disponible)
+
+**Notas técnicas:** no reemplaza US-010 (CSV para cualquier usuario). El xlsx debe incluir al menos las columnas del CSV vigente. Si US-025 aún no está implementada, el endpoint puede quedar abierto y el botón visible; el chequeo de perfil se activa junto con autenticación.
+
+---
+
+## US-027 — Tema claro y oscuro
+**Estado:** Aprobada
+**Prioridad:** Baja · **Estimación:** 2 pts · **Alcance:** frontend (`public/index.html`, `public/styles.css`, `public/app.js`)
+**Origen:** docs/insumos/manual-abm-clientes.md (sección 6)
+
+**Como** usuario del sistema
+**Quiero** elegir modo claro u oscuro y que el sistema recuerde mi preferencia
+**Para** trabajar con la interfaz que me resulte más cómoda.
+
+### Criterios de aceptación
+**Escenario 1 — Activar modo oscuro**
+- **Given** la pantalla principal en modo claro (predeterminado)
+- **When** elijo "Oscuro" en el selector de tema
+- **Then** el documento HTML tiene `data-theme="dark"`
+- **And** el fondo de `body` es distinto al del modo claro (verificable por CSS computed)
+
+**Escenario 2 — Persistencia al recargar**
+- **Given** que elegí modo oscuro
+- **When** recargo la página
+- **Then** el documento sigue con `data-theme="dark"`
+- **When** elijo "Claro"
+- **Then** el documento tiene `data-theme="light"`
+- **And** al recargar se mantiene el modo claro
+
+**Escenario 3 — Preferencia ausente o inválida**
+- **Given** que no hay preferencia de tema guardada, o el valor guardado no es `light` ni `dark`
+- **When** cargo la pantalla principal
+- **Then** se aplica modo claro: `data-theme="light"`
+- **And** el selector de tema muestra "Claro" como opción activa
+
+**Notas técnicas:** persistir en `localStorage` (p. ej. clave `abm-tema`). No requiere backend. Independiente del selector de idioma (US-022). El insumo también pide idioma inglés persistido y accesibilidad por teclado; quedan para US posteriores.
+
